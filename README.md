@@ -1,5 +1,6 @@
 # Base de données gymnass
 la base de données « Gestion des salles de sport »dont le schéma relationnel est donné ci‐ dessous :    
+
 VILLES (VILLE)  
 SPORTIFS (IDSPORTIF, NOM, PRENOM, SEXE, AGE, IDSPORTIFCONSEILLER*)  
 SPORTS (IDSPORT, LIBELLE)  GYMNASES (IDGYMNASE, NOMGYMNASE, ADRESSE, VILLE*, SURFACE)  
