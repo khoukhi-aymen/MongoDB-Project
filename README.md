@@ -1,42 +1,35 @@
-# Base de données gymnass
-la base de données « Gestion des salles de sport »dont le schéma relationnel est donné ci‐ dessous :    
+# Gymnasium Database
 
-VILLES (VILLE)  
+The "Gym Management" database schema is provided below:
 
-SPORTIFS (IDSPORTIF, NOM, PRENOM, SEXE, AGE, IDSPORTIFCONSEILLER*)  
+VILLES (CITY)
 
-SPORTS (IDSPORT, LIBELLE)  GYMNASES (IDGYMNASE, NOMGYMNASE, ADRESSE, VILLE*, SURFACE)
+SPORTIFS (ATHLETE_ID, LAST_NAME, FIRST_NAME, GENDER, AGE, ADVISOR_ID*)
 
-ARBITRER (IDSPORTIF*, IDSPORT*)  
+SPORTS (SPORT_ID, LABEL)
 
-ENTRAINER (IDSPORTIFENTRAINEUR*, IDSPORT*) 
+GYMS (GYM_ID, GYM_NAME, ADDRESS, CITY*, AREA)
 
-JOUER (IDSPORTIF*, IDSPORT*)  
+REFEREE (ATHLETE_ID*, SPORT_ID*)
 
-SEANCES (IDGYMNASE*, IDSPORT*, IDSPORTIFENTRAINEUR*, JOUR, HORAIRE, DUREE)
+TRAINER (TRAINER_ID*, SPORT_ID*)
 
+PLAY (ATHLETE_ID*, SPORT_ID*)
 
+SESSIONS (GYM_ID*, SPORT_ID*, TRAINER_ID*, DAY, TIME, DURATION)
+# Installation
 
-## Installation
+    1. Clone the repository
+    2. Install MongoDB
+    3. Install MongoDB Compass
+    4. Import the gym database into MongoDB Compass
 
-1. Cloner le dépôt
-2. installer MongoDB
-3. installer MongoDBCompass
-4. importer la BD gym sur MongoDBCompass
+# Usage
 
-## Utilisation
+Execute the queries one by one and view the results
+# License
 
-Exécuter les requettes une par une et voir les résultats
-
-
-## Licence
-
-Ce projet est sous licence [MIT LINCENSE]. Voir le fichier LICENSE.md pour plus de détails.
-
-## Auteurs
+This project is licensed under the [MIT License]. See the LICENSE.md file for more details.
+# Authors
 
 Khoukhi Aymene
-
-## Statut du Projet
-
-Stable
