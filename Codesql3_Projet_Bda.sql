@@ -66,6 +66,8 @@ create or replace type T_Sport as object (
   );/
  --nb: j'ai oublie le role Sport_sportif donc je vais l'ajouter 
  alter type T_Sport add attribute sport_Sportif T_set_ref_sportif CASCADE;
+  --nb: j'ai oublie le role Sport_gymnass donc je vais l'ajouter 
+alter type T_Sport add attribute Sport_gymnass T_set_ref_Gymnass cascade;
  
  --//-------------------------------------------------------------// 
                        --//table Arbitrer----------
@@ -156,8 +158,6 @@ end;
 / 
  --//-------------------------------------------------------------// 				   
 /*--- méthode de Calcule pour chaque sport, le nombre de gymnass.-------------*/
---//_________________ ajouter la collection sport_gymnass de type T_set_ref_Gymnas au type T_Sport________________
-alter type T_Sport add attribute Sport_gymnass T_set_ref_Gymnass cascade;
    --//----------la signature de la méthode ---------------
 alter type T_Sport add member function nbr_gymnass_sport return number cascade;
  --//----------le corps de la méthode ---------------
@@ -213,14 +213,6 @@ create table Arbitrer of T_Arbitrer
 nested table arbitrer_sportif store as table_arbitrer_sportif,
 nested table arbitrer_sport store as table_arbitrer_sport;
 
-               --//table Sport----------
-  
-create table Sport of T_Sport(primary key(IDSPORT),foreign key(sport_arbitrer) references Arbitrer)
-nested table sport_jouer store as table_sport_jouer,
-nested table sport_seance store as table_sport_seance,
-nested table sport_Entrainer store as table_sport_Entrainer,
-nested table SPORT_GYMNASS   store as table_sport_gymnass,
-nested table sport_Entrainer store as table_sport_sportif;
 
 
                --//table Jouer----------
@@ -253,6 +245,17 @@ nested table gymnass_seance store as table_gymnass_seance,
 nested table gymnass_sport store as table_gymnass_sport;
 
 
+               --//table Sport----------
+  
+CREATE TABLE Sport OF T_Sport (
+    PRIMARY KEY (IDSPORT),
+    FOREIGN KEY (SPORT_ARBITRER) REFERENCES Arbitrer
+)
+NESTED TABLE sport_jouer STORE AS table_sport_jouer,
+NESTED TABLE sport_seance STORE AS table_sport_seance,
+NESTED TABLE sport_Entrainer STORE AS table_sport_Entrainer,
+NESTED TABLE SPORT_GYMNASS STORE AS table_sport_gymnass,
+nested table sport_sportif store as table_sport_sportif;
 
 
              --//table seance----------
@@ -277,7 +280,7 @@ CREATE TABLE Seance of T_Seance(
 					
   --//le sportif BOUTAHAR Abderahim conseille le sportif de IDSPORT = 2 et IDSPORTIF 3 et IDSPORTIF 4 et il na pas de conseillé
 INSERT INTO Sportif VALUES(
-    154, 'BOUTAHAR', 'Abderahim', 'M', 30,
+    1, 'BOUTAHAR', 'Abderahim', 'M', 30,
     T_set_ref_Arbitrer(),
 	T_set_ref_Jouer(),
     T_set_ref_Sportif(
@@ -302,6 +305,7 @@ INSERT INTO Sportif VALUES(
     ),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 1)
 );
 --//le sportif BOUZIDI Amel conseille le sportif de IDSPORT = 7 et IDSPORTIF 8 et il est conseillé par le sportif de IDSPORTIF = 1
@@ -315,6 +319,7 @@ INSERT INTO Sportif VALUES(
     ),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 1)
 );
 --//le sportif LACHEMI Bouzid conseille le sportif de IDSPORT = 7 et IDSPORTIF 8 et IDSPORT = 9 et IDSPORTIF 10 et il est conseillé par le sportif de IDSPORTIF = 1
@@ -330,6 +335,7 @@ INSERT INTO Sportif VALUES(
     ),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 1)
 );
 --//le sportif AAKOUB Linda conseille le sportif de IDSPORT = 12 et IDSPORTIF 16 et IDSPORT = 19 et IDSPORTIF 2  et il est conseillé par le sportif de IDSPORTIF = 1
@@ -345,6 +351,7 @@ INSERT INTO Sportif VALUES(
     ),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 1)
 );
 --//le sportif ABBAS Sophia conseille le sportif de IDSPORT = 10 et IDSPORTIF 6 et IDSPORT = 25  et il est conseillé par le sportif de IDSPORTIF = 3
@@ -360,6 +367,7 @@ INSERT INTO Sportif VALUES(
     ),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 3)
 );
 --//le sportif HADJ Zouhir conseille le sportif de IDSPORT = 30 et IDSPORTIF 9  et il est conseillé par le sportif de IDSPORTIF = 2
@@ -373,6 +381,7 @@ INSERT INTO Sportif VALUES(
     ),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 2)
 );
 
@@ -388,6 +397,7 @@ INSERT INTO Sportif VALUES(
     ),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 2)
 );
 --//le sportif ABDELMOUMEN Nadia conseille le sportif de IDSPORT = 67 et IDSPORTIF = 6 IDSPORTIF = 34 et IDSPORTIF = 4  et il est conseillé par le sportif de IDSPORTIF = 4
@@ -403,6 +413,7 @@ INSERT INTO Sportif VALUES(
     ),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 4)
 );
 --//le sportif ABAD Abdelhamid conseille le sportif de IDSPORT = 9 et IDSPORTIF = 6 IDSPORTIF = 5 et IDSPORTIF = 13  et il est conseillé par le sportif de IDSPORTIF = 2
@@ -418,6 +429,7 @@ INSERT INTO Sportif VALUES(
     ),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 2)
 );
 --//le sportif ABAYAHIA Amine conseille le sportif de IDSPORT = 97 et IDSPORTIF = 6 IDSPORTIF = 50 et il est conseillé par le sportif de IDSPORTIF = 6
@@ -432,6 +444,7 @@ INSERT INTO Sportif VALUES(
     ),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 6)
 );
 --//le sportif ABBACI Riad conseille le sportif de IDSPORT = 17 et IDSPORTIF = 8  et il est conseillé par le sportif de IDSPORTIF = 8
@@ -445,6 +458,7 @@ INSERT INTO Sportif VALUES(
     ),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 8)
 );
 --//le sportif ABBACI Mohamed conseille le sportif de IDSPORT = 17 et IDSPORTIF = 8  et IDSPORTIF = 88 et IDSPORTIF = 5 il est conseillé par le sportif de IDSPORTIF = 4
@@ -460,6 +474,7 @@ INSERT INTO Sportif VALUES(
     ),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 4)
 );
 
@@ -475,6 +490,7 @@ INSERT INTO Sportif VALUES(
     ),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 1)
 );
 
@@ -491,6 +507,7 @@ INSERT INTO Sportif VALUES(
     ),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 3)
 );
 
@@ -507,6 +524,7 @@ INSERT INTO Sportif VALUES(
     ),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 8)
 );
 
@@ -524,6 +542,7 @@ INSERT INTO Sportif VALUES(
     ),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 7)
 );
 
@@ -541,6 +560,7 @@ INSERT INTO Sportif VALUES(
     ),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 5)
 );
 
@@ -557,6 +577,7 @@ INSERT INTO Sportif VALUES(
     ),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 1)
 );
 --//le sportif AZOUG Racim conseille le sportif de IDSPORT = 19 et IDSPORTIF = 8  et IDSPORTIF = 11  il est conseillé par le sportif de IDSPORTIF = 2
@@ -571,6 +592,7 @@ INSERT INTO Sportif VALUES(
     ),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 2)
 );
 
@@ -587,6 +609,7 @@ INSERT INTO Sportif VALUES(
     ),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 2)
 );
 
@@ -604,6 +627,7 @@ INSERT INTO Sportif VALUES(
     ),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 3)
 );
 
@@ -621,6 +645,7 @@ INSERT INTO Sportif VALUES(
     ),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 2)
 );
 
@@ -637,6 +662,7 @@ INSERT INTO Sportif VALUES(
     ),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 7)
 );
 
@@ -654,6 +680,7 @@ INSERT INTO Sportif VALUES(
     ),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 9)
 );
 
@@ -670,6 +697,7 @@ INSERT INTO Sportif VALUES(
     ),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 3)
 );
 
@@ -687,6 +715,7 @@ INSERT INTO Sportif VALUES(
     ),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 7)
 );
 
@@ -703,6 +732,7 @@ INSERT INTO Sportif VALUES(
     ),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 4)
 );
 
@@ -720,6 +750,7 @@ INSERT INTO Sportif VALUES(
     ),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 5)
 );
 
@@ -737,6 +768,7 @@ INSERT INTO Sportif VALUES(
     ),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 4)
 );
 
@@ -754,6 +786,7 @@ INSERT INTO Sportif VALUES(
     ),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 2)
 );
 
@@ -772,6 +805,7 @@ INSERT INTO Sportif VALUES(
     ),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 3)
 );
 
@@ -788,6 +822,7 @@ INSERT INTO Sportif VALUES(
     ),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 1)
 );
 
@@ -804,6 +839,7 @@ INSERT INTO Sportif VALUES(
     ),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 3)
 );
 
@@ -821,6 +857,7 @@ INSERT INTO Sportif VALUES(
     ),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 4)
 );
 
@@ -838,6 +875,7 @@ INSERT INTO Sportif VALUES(
     ),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 1)
 );
 
@@ -856,6 +894,7 @@ INSERT INTO Sportif VALUES(
     ),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 44)
 );
 
@@ -874,6 +913,7 @@ INSERT INTO Sportif VALUES(
     ),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 1)
 );
 
@@ -891,6 +931,7 @@ INSERT INTO Sportif VALUES(
     ),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 8)
 );
 
@@ -908,6 +949,7 @@ INSERT INTO Sportif VALUES(
     ),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 2)
 );
 
@@ -926,6 +968,7 @@ INSERT INTO Sportif VALUES(
     ),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 7)
 );
 
@@ -943,6 +986,7 @@ INSERT INTO Sportif VALUES(
     ),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 5)
 );
 
@@ -959,6 +1003,7 @@ INSERT INTO Sportif VALUES(
     ),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 6)
 );
 
@@ -975,6 +1020,7 @@ INSERT INTO Sportif VALUES(
     ),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 21)
 );
 
@@ -987,6 +1033,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     NULL
 );
 
@@ -998,6 +1045,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 4)
 );
 
@@ -1009,6 +1057,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 2)
 );
 
@@ -1020,6 +1069,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 2)
 );
 
@@ -1031,6 +1081,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 5)
 );
 
@@ -1043,6 +1094,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 2)
 );
 
@@ -1054,6 +1106,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 5)
 );
 
@@ -1065,6 +1118,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 5)
 );
 
@@ -1077,6 +1131,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 1)
 );
 
@@ -1088,6 +1143,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 2)
 );
 
@@ -1100,6 +1156,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 2)
 );
 
@@ -1112,6 +1169,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 1)
 );
 
@@ -1124,6 +1182,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 1)
 );
 
@@ -1135,6 +1194,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 4)
 );
 
@@ -1147,6 +1207,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     NULL
 );
 
@@ -1158,6 +1219,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 3)
 );
 
@@ -1169,6 +1231,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 7)
 );
 
@@ -1180,6 +1243,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 3)
 );
 
@@ -1191,6 +1255,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 1)
 );
 
@@ -1202,6 +1267,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 2)
 );
 
@@ -1213,6 +1279,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     NULL
 );
 
@@ -1224,6 +1291,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 2)
 );
 
@@ -1236,6 +1304,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 2)
 );
 
@@ -1247,6 +1316,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 2)
 );
 
@@ -1258,6 +1328,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 7)
 );
 
@@ -1269,6 +1340,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 9)
 );
 
@@ -1280,6 +1352,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 8)
 );
 
@@ -1291,6 +1364,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 8)
 );
 
@@ -1302,6 +1376,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 6)
 );
 
@@ -1313,6 +1388,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 5)
 );
 
@@ -1324,6 +1400,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 1)
 );
 
@@ -1335,6 +1412,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 5)
 );
 
@@ -1347,6 +1425,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 1)
 );
 
@@ -1358,6 +1437,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     NULL
 );
 
@@ -1369,6 +1449,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 2)
 );
 
@@ -1380,6 +1461,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 1)
 );
 
@@ -1391,6 +1473,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 1)
 );
 
@@ -1402,6 +1485,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 14)
 );
 
@@ -1414,6 +1498,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 4)
 );
 
@@ -1425,6 +1510,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 2)
 );
 --//le sportif LOUATI Ahmed  conseille aucun sportif  et il est conseillé par le sportif IDSPORTIF = 2
@@ -1435,6 +1521,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 2)
 );
 
@@ -1446,6 +1533,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 2)
 );
 
@@ -1457,6 +1545,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 2)
 );
 
@@ -1469,6 +1558,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 8)
 );
 
@@ -1481,6 +1571,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     NULL
 );
 
@@ -1492,6 +1583,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 2)
 );
 
@@ -1503,6 +1595,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 98)
 );
 
@@ -1514,6 +1607,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 5)
 );
 
@@ -1525,6 +1619,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 2)
 );
 
@@ -1536,6 +1631,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 4)
 );
 
@@ -1548,6 +1644,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 2)
 );
 
@@ -1560,6 +1657,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 2)
 );
 
@@ -1572,6 +1670,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     NULL
 );
 
@@ -1584,6 +1683,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 2)
 );
 
@@ -1596,6 +1696,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     NULL
 );
 
@@ -1608,6 +1709,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 9)
 );
 
@@ -1624,6 +1726,7 @@ INSERT INTO Sportif VALUES(
 	),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 5)
 );
 
@@ -1640,6 +1743,7 @@ INSERT INTO Sportif VALUES(
 	),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 2)
 );
 
@@ -1656,6 +1760,7 @@ INSERT INTO Sportif VALUES(
 	),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 4)
 );
 
@@ -1672,6 +1777,7 @@ INSERT INTO Sportif VALUES(
 	),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 1)
 );
 
@@ -1688,6 +1794,7 @@ INSERT INTO Sportif VALUES(
 	),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 3)
 );
 
@@ -1705,6 +1812,7 @@ INSERT INTO Sportif VALUES(
 	),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 1)
 );
 
@@ -1721,6 +1829,7 @@ INSERT INTO Sportif VALUES(
 	),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 1)
 );
 
@@ -1738,6 +1847,7 @@ INSERT INTO Sportif VALUES(
 	),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 4)
 );
 
@@ -1755,6 +1865,7 @@ INSERT INTO Sportif VALUES(
 	),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 5)
 );
 
@@ -1771,6 +1882,7 @@ INSERT INTO Sportif VALUES(
 	),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 4)
 );
 
@@ -1782,6 +1894,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 8)
 );
 
@@ -1794,6 +1907,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 2)
 );
 
@@ -1805,6 +1919,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 2)
 );
 
@@ -1817,6 +1932,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 2)
 );
 
@@ -1828,6 +1944,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 1)
 );
 
@@ -1839,6 +1956,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 8)
 );
 
@@ -1851,6 +1969,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 2)
 );
 
@@ -1863,6 +1982,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 2)
 );
 
@@ -1875,6 +1995,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 1)
 );
 
@@ -1888,6 +2009,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 6)
 );
 
@@ -1899,6 +2021,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 5)
 );
 
@@ -1910,6 +2033,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 6)
 );
 
@@ -1921,6 +2045,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 6)
 );
 
@@ -1933,6 +2058,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 6)
 );
 
@@ -1944,6 +2070,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 2)
 );
 
@@ -1956,6 +2083,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 6)
 );
 
@@ -1967,6 +2095,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 2)
 );
 
@@ -1978,6 +2107,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 1)
 );
 
@@ -1990,6 +2120,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 3)
 );
 
@@ -2002,6 +2133,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 5)
 );
 
@@ -2014,6 +2146,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 2)
 );
 
@@ -2025,6 +2158,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 2)
 );
 
@@ -2036,6 +2170,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 2)
 );
 
@@ -2047,6 +2182,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 2)
 );
 
@@ -2059,6 +2195,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 4)
 );
 
@@ -2070,6 +2207,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 2)
 );
 
@@ -2082,6 +2220,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 2)
 );
 
@@ -2093,6 +2232,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 1)
 );
 
@@ -2104,6 +2244,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 1)
 );
 
@@ -2115,6 +2256,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 7)
 );
 
@@ -2126,6 +2268,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 5)
 );
 
@@ -2137,6 +2280,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 1)
 );
 
@@ -2149,6 +2293,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 5)
 );
 
@@ -2161,6 +2306,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 2)
 );
 
@@ -2172,6 +2318,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 2)
 );
 
@@ -2183,6 +2330,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 3)
 );
 
@@ -2195,6 +2343,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 2)
 );
 
@@ -2207,6 +2356,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 1)
 );
 
@@ -2218,6 +2368,7 @@ INSERT INTO Sportif VALUES(
     T_set_ref_Sportif(),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 7)
 );
 
@@ -2235,6 +2386,7 @@ INSERT INTO Sportif VALUES(
     ),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 2)
 );
 
@@ -2251,19 +2403,20 @@ INSERT INTO Sportif VALUES(
     ),
     T_set_ref_Seance(),
     T_set_ref_Entrainer(),
+	T_set_ref_Sport(),
     (select ref(s) from Sportif s where s.IDSPORTIF = 2)
 );
 
 
                  --//---------------------------->table Sport <-----------------------------------
 						 
-INSERT INTO Sport VALUES(10,'Basket ball',
+INSERT INTO Sport VALUES(1,'Basket ball',
 						 NULL,
 						 T_set_ref_Jouer(),
 						 T_set_ref_Seance(),
 						 T_set_ref_Entrainer(),
-						 T_set_ref_Gymnass(),
-						 T_set_ref_Sportif()
+						  T_set_ref_Sportif(),
+						 T_set_ref_Gymnass()
 );
 
 INSERT INTO Sport VALUES(2,'Volley ball',
@@ -2271,6 +2424,7 @@ INSERT INTO Sport VALUES(2,'Volley ball',
 						 T_set_ref_Jouer(),
 						 T_set_ref_Seance(),
 						 T_set_ref_Entrainer(),
+						 T_set_ref_Sportif(),
 						 T_set_ref_Gymnass()
 );
 
@@ -2279,6 +2433,7 @@ INSERT INTO Sport VALUES(3,'Hand ball',
 						 T_set_ref_Jouer(),
 						 T_set_ref_Seance(),
 						 T_set_ref_Entrainer(),
+						 T_set_ref_Sportif(),
 						 T_set_ref_Gymnass()
 );
 
@@ -2287,6 +2442,7 @@ INSERT INTO Sport VALUES(4,'Tennis',
 						 T_set_ref_Jouer(),
 						 T_set_ref_Seance(),
 						 T_set_ref_Entrainer(),
+						 T_set_ref_Sportif(),
 						 T_set_ref_Gymnass()
 );
 
@@ -2295,7 +2451,9 @@ INSERT INTO Sport VALUES(5,'Hockey',
 						 T_set_ref_Jouer(),
 						 T_set_ref_Seance(),
 						 T_set_ref_Entrainer(),
+						 T_set_ref_Sportif(),
 						 T_set_ref_Gymnass()
+						 
 );
 
 INSERT INTO Sport VALUES(6,'Badmington',
@@ -2303,7 +2461,9 @@ INSERT INTO Sport VALUES(6,'Badmington',
 						 T_set_ref_Jouer(),
 						 T_set_ref_Seance(),
 						 T_set_ref_Entrainer(),
+						  T_set_ref_Sportif(),
 						 T_set_ref_Gymnass()
+						
 );
 
 INSERT INTO Sport VALUES(7,'Ping pong',
@@ -2311,6 +2471,7 @@ INSERT INTO Sport VALUES(7,'Ping pong',
 						 T_set_ref_Jouer(),
 						 T_set_ref_Seance(),
 						 T_set_ref_Entrainer(),
+						 T_set_ref_Sportif(),
 						 T_set_ref_Gymnass()
 );
 
@@ -2320,6 +2481,7 @@ INSERT INTO Sport VALUES(8,'Football',
 						 T_set_ref_Jouer(),
 						 T_set_ref_Seance(),
 						 T_set_ref_Entrainer(),
+						 T_set_ref_Sportif(),
 						 T_set_ref_Gymnass()
 );
 
@@ -2329,6 +2491,16 @@ INSERT INTO Sport VALUES(9,'Boxe',
 						 T_set_ref_Jouer(),
 						 T_set_ref_Seance(),
 						 T_set_ref_Entrainer(),
+						 T_set_ref_Sportif(),
+						 T_set_ref_Gymnass()
+);
+
+INSERT INTO Sport VALUES(10,'Basket ball',
+						 NULL,
+						 T_set_ref_Jouer(),
+						 T_set_ref_Seance(),
+						 T_set_ref_Entrainer(),
+						  T_set_ref_Sportif(),
 						 T_set_ref_Gymnass()
 );
 
@@ -2339,384 +2511,387 @@ INSERT INTO Sport VALUES(9,'Boxe',
 			  
 --// lentraineur de IDSPORTIF = 1 entraine le sport de IDSPORT = 1 
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 1),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 1)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 1)
+											)
 							);
 --// lentraineur de IDSPORTIF = 1 entraine le sport de IDSPORT = 2 
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 1),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 2)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 1)
+											)
+							 
 							);
 							
 --// lentraineur de IDSPORTIF = 1 entraine le sport de IDSPORT = 3 
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 1),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 3)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 1)
+											)
+							 
 							);
 --// lentraineur de IDSPORTIF = 1 entraine le sport de IDSPORT = 5 
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 1),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 5)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 1)
+											)
 							);
 --// lentraineur de IDSPORTIF = 1 entraine le sport de IDSPORT = 6 
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 1),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 6)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 1)
+											)
+							 
 							);
 
 --// lentraineur de IDSPORTIF = 2 entraine le sport de IDSPORT = 1 
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 2),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 1)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 2)
+											)
 							);
 --// lentraineur de IDSPORTIF = 2 entraine le sport de IDSPORT = 2
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 2),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 2)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 2)
+											)
 							);
 --// lentraineur de IDSPORTIF = 2 entraine le sport de IDSPORT = 3
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 2),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 3)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 2)
+											)
 							);
 --// lentraineur de IDSPORTIF = 2 entraine le sport de IDSPORT = 4
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 2),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 4)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 2)
+											)
 							);
 --// lentraineur de IDSPORTIF = 2 entraine le sport de IDSPORT = 5
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 2),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 5)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 2)
+											)
 							);
 --// lentraineur de IDSPORTIF = 2 entraine le sport de IDSPORT = 6
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 2),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 6)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 2)
+											)
 							);
 --// lentraineur de IDSPORTIF = 2 entraine le sport de IDSPORT = 7
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 2),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 7)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 2)
+											)
 							);
 --// lentraineur de IDSPORTIF = 2 entraine le sport de IDSPORT = 9
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 2),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 9)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 2)
+											)
 							);
 --// lentraineur de IDSPORTIF = 3 entraine le sport de IDSPORT = 1
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 3),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 1)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 3)
+											)
 							);
 --// lentraineur de IDSPORTIF = 3 entraine le sport de IDSPORT = 2
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 3),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 2)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 3)
+											)
 							);
 --// lentraineur de IDSPORTIF = 3 entraine le sport de IDSPORT = 3
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 3),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 3)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 3)
+											)
 							);
 --// lentraineur de IDSPORTIF = 3 entraine le sport de IDSPORT = 6
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 3),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 6)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 3)
+											)
 							);
 --// lentraineur de IDSPORTIF = 4 entraine le sport de IDSPORT = 1
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 4),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 1)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 4)
+											)
 							);
 --// lentraineur de IDSPORTIF = 4 entraine le sport de IDSPORT = 7
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 4),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 7)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 4)
+											)
 							);
 --// lentraineur de IDSPORTIF = 4 entraine le sport de IDSPORT = 9
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 4),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 9)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 4)
+											)
 							);
 --// lentraineur de IDSPORTIF = 4 entraine le sport de IDSPORT = 5
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 4),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 5)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 4)
+											)
 							);
 --// lentraineur de IDSPORTIF = 6 entraine le sport de IDSPORT = 7
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 6),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 7)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 6)
+											)
 							);
 --// lentraineur de IDSPORTIF = 6 entraine le sport de IDSPORT = 9
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 6),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 9)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 6)
+											)
 							);
 							
 --// lentraineur de IDSPORTIF = 7 entraine le sport de IDSPORT = 2
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 7),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 2)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 7)
+											)
 							);
 --// lentraineur de IDSPORTIF = 7 entraine le sport de IDSPORT = 3
 INSERT INTO Entrainer VALUES(
+                              (select ref(b) from Sportif b where b.IDSPORTIF = 7),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 3)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 7)
+											)
 							);
 --// lentraineur de IDSPORTIF = 7 entraine le sport de IDSPORT = 5
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 7),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 5)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 7)
+											)
 							);
 --// lentraineur de IDSPORTIF = 7 entraine le sport de IDSPORT = 6
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 7),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 6)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 7)
+											)
 							);
 --// lentraineur de IDSPORTIF = 29 entraine le sport de IDSPORT = 7
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 29),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 7)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 29)
+											)
 							);
 --// lentraineur de IDSPORTIF = 30 entraine le sport de IDSPORT = 7
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 30),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 7)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 30)
+											)
 							);
 --// lentraineur de IDSPORTIF = 31 entraine le sport de IDSPORT = 7
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 31),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 7)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 31)
+											)
 							);
 --// lentraineur de IDSPORTIF = 32 entraine le sport de IDSPORT = 7
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 32),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 7)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 32)
+											)
 							);
 --// lentraineur de IDSPORTIF = 35 entraine le sport de IDSPORT = 6
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 35),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 6)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 35)
+											)
 							);
 --// lentraineur de IDSPORTIF = 35 entraine le sport de IDSPORT = 7
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 35),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 7)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 35)
+											)
 							);
 --// lentraineur de IDSPORTIF = 36 entraine le sport de IDSPORT = 6
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 36),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 6)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 36)
+											)
 							);
 --// lentraineur de IDSPORTIF = 38 entraine le sport de IDSPORT = 7
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 38),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 7)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 38)
+											)
 							);
 --// lentraineur de IDSPORTIF = 40 entraine le sport de IDSPORT = 6
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 40),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 6)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 40)
+											)
 							);
 --// lentraineur de IDSPORTIF = 40 entraine le sport de IDSPORT = 7
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 40),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 7)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 40)
+											)
 							);
 --// lentraineur de IDSPORTIF = 48 entraine le sport de IDSPORT = 6
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 48),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 6)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 48)
+											)
 							);
 --// lentraineur de IDSPORTIF = 50 entraine le sport de IDSPORT = 6
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 50),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 6)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 50)
+											)
 							);
 --// lentraineur de IDSPORTIF = 56 entraine le sport de IDSPORT = 6
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 56),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 6)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 56)
+											)
 							);
 --// lentraineur de IDSPORTIF = 57 entraine le sport de IDSPORT = 2
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 57),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 2)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 57)
+											)
 							);
 --// lentraineur de IDSPORTIF = 57 entraine le sport de IDSPORT = 4
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 57),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 4)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 57)
+											)
 							);
 --// lentraineur de IDSPORTIF = 58 entraine le sport de IDSPORT = 2
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 58),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 2)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 58)
+											)
 							);
 --// lentraineur de IDSPORTIF = 58 entraine le sport de IDSPORT = 4
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 58),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 4)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 58)
+											)
 							);
 --// lentraineur de IDSPORTIF = 59 entraine le sport de IDSPORT = 2
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 59),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 2)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 59)
+											)
 							);
 --// l'entraineur de IDSPORTIF = 59 entraine le sport de IDSPORT = 4
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 59),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 4)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 59)
+											)
 							);
 --// l'entraineur de IDSPORTIF = 60 entraine le sport de IDSPORT = 2
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 60),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 2)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 60)
+											)
 							);
 --// l'entraineur de IDSPORTIF = 60 entraine le sport de IDSPORT = 4
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 60),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 4)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 60)
+											)
 							);
 --// l'entraineur de IDSPORTIF = 60 entraine le sport de IDSPORT = 4
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 60),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 7)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 60)
+											)
 							);
 --// l'entraineur de IDSPORTIF = 61 entraine le sport de IDSPORT = 2
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 61),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 2)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 61)
+											)
 							);
 --// l'entraineur de IDSPORTIF = 61 entraine le sport de IDSPORT = 4
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 61),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 4)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 61)
+											)
 							);
 --// l'entraineur de IDSPORTIF = 149 entraine le sport de IDSPORT = 1
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 149),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 1)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 149)
+											)
 							);
 --// l'entraineur de IDSPORTIF = 151 entraine le sport de IDSPORT = 1
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 151),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 1)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 151)
+											)
 							);
 --// l'entraineur de IDSPORTIF = 151 entraine le sport de IDSPORT = 3
 INSERT INTO Entrainer VALUES(
+                             (select ref(b) from Sportif b where b.IDSPORTIF = 151),
 						     T_set_ref_Sport(
 							                (select ref(a) from Sport a where a.IDSPORT = 1)
-											),
-							 (select ref(b) from Sportif b where b.IDSPORTIF = 151)
+											)
 							);
 
 
@@ -4691,171 +4866,171 @@ INSERT INTO Jouer VALUES(
 			
 --//la salle IDGYMNASE = 1 se trouve a la ville Alger centre
 INSERT INTO Gymnass VALUES(1,'Five Gym Club','Boulevard Mohamed 5',200,
-                            (select ref(v) from ville v where v.VILLE = 'Alger centre'),
 							T_set_ref_Seance(),
+							(select ref(v) from ville v where v.VILLE = 'Alger centre'),
 							T_set_ref_Sport()
 							);
 --//la salle IDGYMNASE = 2 se trouve a la ville Les sources
 INSERT INTO Gymnass VALUES(2,'Mina Sport','28 impasse musette les sources',450,
-                            (select ref(v) from ville v where v.VILLE = 'Les sources'),
 							T_set_ref_Seance(),
+							(select ref(v) from ville v where v.VILLE = 'Les sources'),
 							T_set_ref_Sport()
 							);				
 --//la salle IDGYMNASE = 3 se trouve a la ville Belouizdad
 INSERT INTO Gymnass VALUES(3,'Aït Saada','Belouizdad',400,
-                            (select ref(v) from ville v where v.VILLE = 'Belouizdad'),
 							T_set_ref_Seance(),
+							(select ref(v) from ville v where v.VILLE = 'Belouizdad'),
 							T_set_ref_Sport()
 							);	
 --//la salle IDGYMNASE = 4 se trouve a la ville Sidi Mhamed
 INSERT INTO Gymnass VALUES(4,'Bahri Gym','Rue Mohamed Benzineb',500,
-                            (select ref(v) from ville v where v.VILLE = 'Sidi Mhamed'),
 							T_set_ref_Seance(),
+							(select ref(v) from ville v where v.VILLE = 'Sidi Mhamed'),
 							T_set_ref_Sport()
 							);
 --//la salle IDGYMNASE = 5 se trouve a la ville El Biar
 INSERT INTO Gymnass VALUES(5,'Ladies First','3 Rue Diar Naama N° 03',620,
-                            (select ref(v) from ville v where v.VILLE = 'El Biar'),
 							T_set_ref_Seance(),
+							(select ref(v) from ville v where v.VILLE = 'El Biar'),
 							T_set_ref_Sport()
 							);	
 --//la salle IDGYMNASE = 6 se trouve a la ville El Mouradia
 INSERT INTO Gymnass VALUES(6,'C.T.F Club','Rue Sylvain FOURASTIER',400,
-                            (select ref(v) from ville v where v.VILLE = 'El Mouradia'),
 							T_set_ref_Seance(),
+							(select ref(v) from ville v where v.VILLE = 'El Mouradia'),
 							T_set_ref_Sport()
 							);		
 --//la salle IDGYMNASE = 7 se trouve a la ville Alger centre
 INSERT INTO Gymnass VALUES(7,'Body Fitness Center','Rue Rabah Takdjourt',360,
-                            (select ref(v) from ville v where v.VILLE = 'Alger centre'),
 							T_set_ref_Seance(),
+							(select ref(v) from ville v where v.VILLE = 'Alger centre'),
 							T_set_ref_Sport()
 							);
 --//la salle IDGYMNASE = 8 se trouve a la ville Hydra
 INSERT INTO Gymnass VALUES(8,'Club Hydra Forme','Rue de l''Oasis',420,
-                            (select ref(v) from ville v where v.VILLE = 'Hydra'),
 							T_set_ref_Seance(),
+							(select ref(v) from ville v where v.VILLE = 'Hydra'),
 							T_set_ref_Sport()
 							);								
 --//la salle IDGYMNASE = 9 se trouve a la ville Dely Brahim
 INSERT INTO Gymnass VALUES(9,'Profitness Dely Brahim','26 Bois des Cars 3',620,
-                            (select ref(v) from ville v where v.VILLE = 'Dely Brahim'),
 							T_set_ref_Seance(),
+							(select ref(v) from ville v where v.VILLE = 'Dely Brahim'),
 							T_set_ref_Sport()
 							);	
 --//la salle IDGYMNASE = 10 se trouve a la ville Kouba
 INSERT INTO Gymnass VALUES(10,'CLUB SIFAKS','Rue Ben Omar 31',400,
-                            (select ref(v) from ville v where v.VILLE = 'Kouba'),
 							T_set_ref_Seance(),
+							(select ref(v) from ville v where v.VILLE = 'Kouba'),
 							T_set_ref_Sport()
 							);
 --//la salle IDGYMNASE = 11 se trouve a la ville El Mouradia
 INSERT INTO Gymnass VALUES(11,'Gym ZAAF Club','19 Ave Merabet Athmane',300,
-                            (select ref(v) from ville v where v.VILLE = 'El Mouradia'),
 							T_set_ref_Seance(),
+							(select ref(v) from ville v where v.VILLE = 'El Mouradia'),
 							T_set_ref_Sport()
 							);	
 --//la salle IDGYMNASE = 12 se trouve a la ville Bir Mourad Raïs
 INSERT INTO Gymnass VALUES(12,'GYM power','villa N°2, Chemin Said Hamdine',480,
-                            (select ref(v) from ville v where v.VILLE = 'Bir Mourad Raïs'),
 							T_set_ref_Seance(),
+							(select ref(v) from ville v where v.VILLE = 'Bir Mourad Raïs'),
 							T_set_ref_Sport()
 							);
 --//la salle IDGYMNASE = 13 se trouve a la ville Hydra
 INSERT INTO Gymnass VALUES(13,'Icosium sport','Rue ICOSUM',200,
-                            (select ref(v) from ville v where v.VILLE = 'Hydra'),
 							T_set_ref_Seance(),
+							(select ref(v) from ville v where v.VILLE = 'Hydra'),
 							T_set_ref_Sport()
 							);
 --//la salle IDGYMNASE = 14 se trouve a la ville Birkhadem
 INSERT INTO Gymnass VALUES(14,'GIGA Fitness','res, Rue Hamoum Tahar',500,
-                            (select ref(v) from ville v where v.VILLE = 'Birkhadem'),
 							T_set_ref_Seance(),
+							(select ref(v) from ville v where v.VILLE = 'Birkhadem'),
 							T_set_ref_Sport()
 							);	
 --//la salle IDGYMNASE = 15 se trouve a la ville Birkhadem
 INSERT INTO Gymnass VALUES(15,'AC Fitness Et Aqua','Lotissement FAHS lot A n 12 parcelle 26',400,
-                            (select ref(v) from ville v where v.VILLE = 'Birkhadem'),
 							T_set_ref_Seance(),
+							(select ref(v) from ville v where v.VILLE = 'Birkhadem'),
 							T_set_ref_Sport()
 							);	
 --//la salle IDGYMNASE = 16 se trouve a la ville El Achour
 INSERT INTO Gymnass VALUES(16,'MELIA GYM','Résidence les deux bassins Sahraoui local N° 03',600,
-                            (select ref(v) from ville v where v.VILLE = 'El Achour'),
 							T_set_ref_Seance(),
+							(select ref(v) from ville v where v.VILLE = 'El Achour'),
 							T_set_ref_Sport()
 							);
 --//la salle IDGYMNASE = 17 se trouve a la ville Kouba
 INSERT INTO Gymnass VALUES(17,'Sam Gym Power','Rue Mahdoud BENKHOUDJA',400,
-                            (select ref(v) from ville v where v.VILLE = 'Kouba'),
 							T_set_ref_Seance(),
+							(select ref(v) from ville v where v.VILLE = 'Kouba'),
 							T_set_ref_Sport()
 							);
 --//la salle IDGYMNASE = 18 se trouve a la ville Bordj el kiffan
 INSERT INTO Gymnass VALUES(18,'AQUAFORTLAND SPA','Bordj el kiffan',450,
-                            (select ref(v) from ville v where v.VILLE = 'Bordj el kiffan'),
 							T_set_ref_Seance(),
+							(select ref(v) from ville v where v.VILLE = 'Bordj el kiffan'),
 							T_set_ref_Sport()
 							);	
 --//la salle IDGYMNASE = 19 se trouve a la ville Baba hassenn
 INSERT INTO Gymnass VALUES(19,'GoFitness','Lotissement el louz n°264',450,
-                            (select ref(v) from ville v where v.VILLE = 'Baba hassen'),
 							T_set_ref_Seance(),
+							(select ref(v) from ville v where v.VILLE = 'Baba hassen'),
 							T_set_ref_Sport()
 							);	
 	
 --//la salle IDGYMNASE = 20 se trouve a la ville Chéraga
 INSERT INTO Gymnass VALUES(20,'Best Body Gym','Cité Alioua Fodil',400,
-                            (select ref(v) from ville v where v.VILLE = 'Chéraga'),
 							T_set_ref_Seance(),
+							(select ref(v) from ville v where v.VILLE = 'Chéraga'),
 							T_set_ref_Sport()
 							);	
 --//la salle IDGYMNASE = 21 se trouve a la ville Alger
 INSERT INTO Gymnass VALUES(21,'Power house gym','Cooperative Amina 02 Lot 15',400,
-                            (select ref(v) from ville v where v.VILLE = 'Alger'),
 							T_set_ref_Seance(),
+							(select ref(v) from ville v where v.VILLE = 'Alger'),
 							T_set_ref_Sport()
 							);
 --//la salle IDGYMNASE = 22 se trouve a la ville Alger
 INSERT INTO Gymnass VALUES(22,'POWER ZONE GYM','Chemin Fernane Hanafi',500,
-                            (select ref(v) from ville v where v.VILLE = 'Hussein Dey'),
 							T_set_ref_Seance(),
+							(select ref(v) from ville v where v.VILLE = 'Hussein Dey'),
 							T_set_ref_Sport()
 							);
 --//la salle IDGYMNASE = 23 se trouve a la ville Béni Messous
 INSERT INTO Gymnass VALUES(23,'World Gym','14 Boulevard Ibrahim Hadjress',520,
-                            (select ref(v) from ville v where v.VILLE = 'Béni Messous'),
 							T_set_ref_Seance(),
+							(select ref(v) from ville v where v.VILLE = 'Béni Messous'),
 							T_set_ref_Sport()
 							);
 --//la salle IDGYMNASE = 24 se trouve a la ville Bordj El Bahr
 INSERT INTO Gymnass VALUES(24,'Moving Club','Bordj El Bahri',450,
-                            (select ref(v) from ville v where v.VILLE = 'Bordj El Bahr'),
 							T_set_ref_Seance(),
+							(select ref(v) from ville v where v.VILLE = 'Bordj El Bahr'),
 							T_set_ref_Sport()
 							);
 --//la salle IDGYMNASE = 25 se trouve a la ville Chéraga
 INSERT INTO Gymnass VALUES(25,'Tiger gym','Route de Bouchaoui',620,
-                            (select ref(v) from ville v where v.VILLE = 'Chéraga'),
 							T_set_ref_Seance(),
+							(select ref(v) from ville v where v.VILLE = 'Chéraga'),
 							T_set_ref_Sport()
 							);
 --//la salle IDGYMNASE = 26 se trouve a la ville Mohammadia
 INSERT INTO Gymnass VALUES(26,'Lion CrossFit','Centre commercial-Mohamadia mall',600,
-                            (select ref(v) from ville v where v.VILLE = 'Mohammadia'),
 							T_set_ref_Seance(),
+							(select ref(v) from ville v where v.VILLE = 'Mohammadia'),
 							T_set_ref_Sport()
 							);
 --//la salle IDGYMNASE = 27 se trouve a la ville Saoula
 INSERT INTO Gymnass VALUES(27,'Étoile sportive','Saoula',350,
-                            (select ref(v) from ville v where v.VILLE = 'Saoula'),
 							T_set_ref_Seance(),
+							(select ref(v) from ville v where v.VILLE = 'Saoula'),
 							T_set_ref_Sport()
 							);
 --//la salle IDGYMNASE = 28 se trouve a la ville El Harrach
 INSERT INTO Gymnass VALUES(28,'Fitness life gym','El Harrach',400,
-                            (select ref(v) from ville v where v.VILLE = 'El Harrach'),
 							T_set_ref_Seance(),
+							(select ref(v) from ville v where v.VILLE = 'El Harrach'),
 							T_set_ref_Sport()
 							);
 				--//---------------------------->table Ville <-----------------------------------
@@ -4988,488 +5163,488 @@ INSERT INTO Ville VALUES('Bordj El Bahri',
 --// la seance est faite dans le salle IDGYMNASE = 1 par l'entraineur IDSPORTIF = 149 avec le sport IDSPORT = 1
 INSERT INTO seance VALUES('SAMEDI', 9.0, 60,
                             (select ref(s) from sportif s where s.IDSPORTIF = 149),
-							(select ref(f) from sport f where f.IDSPORT = 1),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 1)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 1),
+							(select ref(f) from sport f where f.IDSPORT = 1)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 1 par l'entraineur IDSPORTIF = 1 avec le sport IDSPORT = 3
 INSERT INTO seance VALUES('LUNDI', 9.0, 60,
                             (select ref(s) from sportif s where s.IDSPORTIF = 1),
-							(select ref(f) from sport f where f.IDSPORT = 3),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 1)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 1),
+							(select ref(f) from sport f where f.IDSPORT = 3)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 1 par l'entraineur IDSPORTIF = 1 avec le sport IDSPORT = 3
 INSERT INTO seance VALUES('LUNDI', 11.3, 60,
                             (select ref(s) from sportif s where s.IDSPORTIF = 1),
-							(select ref(f) from sport f where f.IDSPORT = 3),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 1)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 1),
+							(select ref(f) from sport f where f.IDSPORT = 3)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 1 par l'entraineur IDSPORTIF = 1 avec le sport IDSPORT = 3
 INSERT INTO seance VALUES('LUNDI', 14.0, 60,
                             (select ref(s) from sportif s where s.IDSPORTIF = 1),
-							(select ref(f) from sport f where f.IDSPORT = 3),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 1)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 1),
+							(select ref(f) from sport f where f.IDSPORT = 3)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 1 par l'entraineur IDSPORTIF = 1 avec le sport IDSPORT = 3
 INSERT INTO seance VALUES('LUNDI', 17.3, 120,
                             (select ref(s) from sportif s where s.IDSPORTIF = 1),
-							(select ref(f) from sport f where f.IDSPORT = 3),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 1)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 1),
+							(select ref(f) from sport f where f.IDSPORT = 3)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 1 par l'entraineur IDSPORTIF = 1 avec le sport IDSPORT = 3
 INSERT INTO seance VALUES('LUNDI', 19.3, 120,
                             (select ref(s) from sportif s where s.IDSPORTIF = 1),
-							(select ref(f) from sport f where f.IDSPORT = 3),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 1)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 1),
+							(select ref(f) from sport f where f.IDSPORT = 3)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 1 par l'entraineur IDSPORTIF = 2 avec le sport IDSPORT = 3
 INSERT INTO seance VALUES('DIMANCHE', 17.3, 120,
                             (select ref(s) from sportif s where s.IDSPORTIF = 2),
-							(select ref(f) from sport f where f.IDSPORT = 3),
 							(select ref(g) from gymnass g where g.IDGYMNASE = 1)
+							(select ref(f) from sport f where f.IDSPORT = 3),
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 1 par l'entraineur IDSPORTIF = 2 avec le sport IDSPORT = 3
 INSERT INTO seance VALUES('DIMANCHE', 19.3, 120,
                             (select ref(s) from sportif s where s.IDSPORTIF = 2),
-							(select ref(f) from sport f where f.IDSPORT = 3),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 1)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 1),
+							(select ref(f) from sport f where f.IDSPORT = 3)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 1 par l'entraineur IDSPORTIF = 2 avec le sport IDSPORT = 3
 INSERT INTO seance VALUES('MARDI', 17.3, 120,
                             (select ref(s) from sportif s where s.IDSPORTIF = 2),
-							(select ref(f) from sport f where f.IDSPORT = 3),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 1)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 1),
+							(select ref(f) from sport f where f.IDSPORT = 3)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 1 par l'entraineur IDSPORTIF = 2 avec le sport IDSPORT = 3
 INSERT INTO seance VALUES('MERCREDI', 17.3, 120,
                             (select ref(s) from sportif s where s.IDSPORTIF = 2),
-							(select ref(f) from sport f where f.IDSPORT = 3),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 1)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 1),
+							(select ref(f) from sport f where f.IDSPORT = 3)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 1 par l'entraineur IDSPORTIF = 2 avec le sport IDSPORT = 3
 INSERT INTO seance VALUES('SAMEDI', 15.3, 60,
                             (select ref(s) from sportif s where s.IDSPORTIF = 2),
-							(select ref(f) from sport f where f.IDSPORT = 3),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 1)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 1),
+							(select ref(f) from sport f where f.IDSPORT = 3)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 1 par l'entraineur IDSPORTIF = 2 avec le sport IDSPORT = 3
 INSERT INTO seance VALUES('SAMEDI', 16.3, 60,
                             (select ref(s) from sportif s where s.IDSPORTIF = 2),
-							(select ref(f) from sport f where f.IDSPORT = 3),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 1)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 1),
+							(select ref(f) from sport f where f.IDSPORT = 3)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 1 par l'entraineur IDSPORTIF = 2 avec le sport IDSPORT = 3
 INSERT INTO seance VALUES('SAMEDI', 17.3, 120,
                             (select ref(s) from sportif s where s.IDSPORTIF = 2),
-							(select ref(f) from sport f where f.IDSPORT = 3),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 1)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 1),
+							(select ref(f) from sport f where f.IDSPORT = 3)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 1 par l'entraineur IDSPORTIF = 3 avec le sport IDSPORT = 3
 INSERT INTO seance VALUES('JEUDI', 20.0, 30,
                             (select ref(s) from sportif s where s.IDSPORTIF = 3),
-							(select ref(f) from sport f where f.IDSPORT = 3),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 1)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 1),
+							(select ref(f) from sport f where f.IDSPORT = 3)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 1 par l'entraineur IDSPORTIF = 3 avec le sport IDSPORT = 3
 INSERT INTO seance VALUES('LUNDI', 14.0, 60,
                             (select ref(s) from sportif s where s.IDSPORTIF = 3),
-							(select ref(f) from sport f where f.IDSPORT = 3),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 1)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 1),
+							(select ref(f) from sport f where f.IDSPORT = 3)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 1 par l'entraineur IDSPORTIF = 3 avec le sport IDSPORT = 3
 INSERT INTO seance VALUES('LUNDI', 18.0, 30,
                             (select ref(s) from sportif s where s.IDSPORTIF = 3),
-							(select ref(f) from sport f where f.IDSPORT = 3),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 1)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 1),
+							(select ref(f) from sport f where f.IDSPORT = 3)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 1 par l'entraineur IDSPORTIF = 3 avec le sport IDSPORT = 3
 INSERT INTO seance VALUES('LUNDI', 19.0, 30,
                             (select ref(s) from sportif s where s.IDSPORTIF = 3),
-							(select ref(f) from sport f where f.IDSPORT = 3),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 1)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 1),
+							(select ref(f) from sport f where f.IDSPORT = 3)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 1 par l'entraineur IDSPORTIF = 3 avec le sport IDSPORT = 3
 INSERT INTO seance VALUES('LUNDI', 20.0, 30,
                             (select ref(s) from sportif s where s.IDSPORTIF = 3),
-							(select ref(f) from sport f where f.IDSPORT = 3),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 1)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 1),
+							(select ref(f) from sport f where f.IDSPORT = 3)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 1 par l'entraineur IDSPORTIF = 7 avec le sport IDSPORT = 5
 INSERT INTO seance VALUES('MERCREDI', 17.0, 190,
                             (select ref(s) from sportif s where s.IDSPORTIF = 3),
-							(select ref(f) from sport f where f.IDSPORT = 5),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 1)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 1),
+							(select ref(f) from sport f where f.IDSPORT = 5)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 2 par l'entraineur IDSPORTIF = 57 avec le sport IDSPORT = 2
 INSERT INTO seance VALUES('DIMANCHE', 17.0, 60,
                             (select ref(s) from sportif s where s.IDSPORTIF = 57),
-							(select ref(f) from sport f where f.IDSPORT = 2),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 2)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 2),
+							(select ref(f) from sport f where f.IDSPORT = 2)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 3 par l'entraineur IDSPORTIF = 149 avec le sport IDSPORT = 2
 INSERT INTO seance VALUES('MERCREDI', 11.0, 30,
                             (select ref(s) from sportif s where s.IDSPORTIF = 149),
-							(select ref(f) from sport f where f.IDSPORT = 2),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 3)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 3),
+							(select ref(f) from sport f where f.IDSPORT = 2)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 3 par l'entraineur IDSPORTIF = 57 avec le sport IDSPORT = 2
 INSERT INTO seance VALUES('LUNDI', 16.3, 90,
                             (select ref(s) from sportif s where s.IDSPORTIF = 57),
-							(select ref(f) from sport f where f.IDSPORT = 2),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 3)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 3),
+							(select ref(f) from sport f where f.IDSPORT = 2)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 3 par l'entraineur IDSPORTIF = 60 avec le sport IDSPORT = 2
 INSERT INTO seance VALUES('JEUDI', 19.0, 60,
                             (select ref(s) from sportif s where s.IDSPORTIF = 60),
-							(select ref(f) from sport f where f.IDSPORT = 2),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 3)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 3),
+							(select ref(f) from sport f where f.IDSPORT = 2)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 4 par l'entraineur IDSPORTIF = 149 avec le sport IDSPORT = 1
 INSERT INTO seance VALUES('VENDREDI', 10.0, 30,
                             (select ref(s) from sportif s where s.IDSPORTIF = 149),
-							(select ref(f) from sport f where f.IDSPORT = 1),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 4)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 4),
+							(select ref(f) from sport f where f.IDSPORT = 1)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 4 par l'entraineur IDSPORTIF = 5 avec le sport IDSPORT = 5
 INSERT INTO seance VALUES('MERCREDI', 19.0, 60,
                             (select ref(s) from sportif s where s.IDSPORTIF = 5),
-							(select ref(f) from sport f where f.IDSPORT = 5),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 4)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 4),
+							(select ref(f) from sport f where f.IDSPORT = 5)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 5 par l'entraineur IDSPORTIF = 57 avec le sport IDSPORT = 2
 INSERT INTO seance VALUES('LUNDI', 16.3, 90,
                             (select ref(s) from sportif s where s.IDSPORTIF = 57),
-							(select ref(f) from sport f where f.IDSPORT = 2),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 5)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 5),
+							(select ref(f) from sport f where f.IDSPORT = 2)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 5 par l'entraineur IDSPORTIF = 6 avec le sport IDSPORT = 5
 INSERT INTO seance VALUES('JEUDI', 19.3, 60,
                             (select ref(s) from sportif s where s.IDSPORTIF = 6),
-							(select ref(f) from sport f where f.IDSPORT = 5),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 5)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 5),
+							(select ref(f) from sport f where f.IDSPORT = 5)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 6 par l'entraineur IDSPORTIF = 6 avec le sport IDSPORT = 5
 INSERT INTO seance VALUES('VENDREDI', 19.0, 60,
                             (select ref(s) from sportif s where s.IDSPORTIF = 6),
-							(select ref(f) from sport f where f.IDSPORT = 5),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 6)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 6),
+							(select ref(f) from sport f where f.IDSPORT = 5)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 6 par l'entraineur IDSPORTIF = 7 avec le sport IDSPORT = 5
 INSERT INTO seance VALUES('JEUDI', 17.0, 90,
                             (select ref(s) from sportif s where s.IDSPORTIF = 7),
-							(select ref(f) from sport f where f.IDSPORT = 5),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 6)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 6),
+							(select ref(f) from sport f where f.IDSPORT = 5)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 8 par l'entraineur IDSPORTIF = 57 avec le sport IDSPORT = 2
 INSERT INTO seance VALUES('DIMANCHE', 17.0, 60,
                             (select ref(s) from sportif s where s.IDSPORTIF = 57),
-							(select ref(f) from sport f where f.IDSPORT = 2),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 8)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 8),
+							(select ref(f) from sport f where f.IDSPORT = 2)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 8 par l'entraineur IDSPORTIF = 57 avec le sport IDSPORT = 2
 INSERT INTO seance VALUES('LUNDI', 16.0, 90,
                             (select ref(s) from sportif s where s.IDSPORTIF = 57),
-							(select ref(f) from sport f where f.IDSPORT = 2),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 8)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 8),
+							(select ref(f) from sport f where f.IDSPORT = 2)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 8 par l'entraineur IDSPORTIF = 60 avec le sport IDSPORT = 2
 INSERT INTO seance VALUES('VENDREDI', 19.0, 60,
                             (select ref(s) from sportif s where s.IDSPORTIF = 60),
-							(select ref(f) from sport f where f.IDSPORT = 2),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 8)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 8),
+							(select ref(f) from sport f where f.IDSPORT = 2)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 8 par l'entraineur IDSPORTIF = 7 avec le sport IDSPORT = 5
 INSERT INTO seance VALUES('SAMEDI', 17.0, 90,
                             (select ref(s) from sportif s where s.IDSPORTIF = 7),
-							(select ref(f) from sport f where f.IDSPORT = 5),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 8)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 8),
+							(select ref(f) from sport f where f.IDSPORT = 5)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 8 par l'entraineur IDSPORTIF = 7 avec le sport IDSPORT = 5
 INSERT INTO seance VALUES('VENDREDI', 14.0, 120,
                             (select ref(s) from sportif s where s.IDSPORTIF = 7),
-							(select ref(f) from sport f where f.IDSPORT = 5),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 8)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 8),
+							(select ref(f) from sport f where f.IDSPORT = 5)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 9 par l'entraineur IDSPORTIF = 6 avec le sport IDSPORT = 5
 INSERT INTO seance VALUES('SAMEDI', 19.0, 60,
                             (select ref(s) from sportif s where s.IDSPORTIF = 6),
-							(select ref(f) from sport f where f.IDSPORT = 5),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 9)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 9),
+							(select ref(f) from sport f where f.IDSPORT = 5)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 10 par l'entraineur IDSPORTIF = 2 avec le sport IDSPORT = 60
 INSERT INTO seance VALUES('SAMEDI', 19.0, 60,
                             (select ref(s) from sportif s where s.IDSPORTIF = 60),
-							(select ref(f) from sport f where f.IDSPORT = 2),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 10)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 10),
+							(select ref(f) from sport f where f.IDSPORT = 2)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 10 par l'entraineur IDSPORTIF =6 avec le sport IDSPORT = 5
 INSERT INTO seance VALUES('DIMANCHE', 19.0, 60,
                             (select ref(s) from sportif s where s.IDSPORTIF = 6),
-							(select ref(f) from sport f where f.IDSPORT = 5),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 10)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 10),
+							(select ref(f) from sport f where f.IDSPORT = 5)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 10 par l'entraineur IDSPORTIF =7 avec le sport IDSPORT = 5
 INSERT INTO seance VALUES('DIMANCHE', 17.0, 60,
                             (select ref(s) from sportif s where s.IDSPORTIF = 7),
-							(select ref(f) from sport f where f.IDSPORT = 5),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 10)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 10),
+							(select ref(f) from sport f where f.IDSPORT = 5)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 12 par l'entraineur IDSPORTIF = 57 avec le sport IDSPORT = 2
 INSERT INTO seance VALUES('DIMANCHE', 17.0, 60,
                             (select ref(s) from sportif s where s.IDSPORTIF = 57),
-							(select ref(f) from sport f where f.IDSPORT = 2),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 12)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 12),
+							(select ref(f) from sport f where f.IDSPORT = 2)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 13 par l'entraineur IDSPORTIF = 60 avec le sport IDSPORT = 2
 INSERT INTO seance VALUES('DIMANCHE', 17.0, 60,
                             (select ref(s) from sportif s where s.IDSPORTIF = 60),
-							(select ref(f) from sport f where f.IDSPORT = 2),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 13)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 13),
+							(select ref(f) from sport f where f.IDSPORT = 2)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 13 par l'entraineur IDSPORTIF = 6 avec le sport IDSPORT = 5
 INSERT INTO seance VALUES('MERCREDI', 20.0, 60,
                             (select ref(s) from sportif s where s.IDSPORTIF = 6),
-							(select ref(f) from sport f where f.IDSPORT = 5),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 13)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 13),
+							(select ref(f) from sport f where f.IDSPORT = 5)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 13 par l'entraineur IDSPORTIF = 7 avec le sport IDSPORT = 5
 INSERT INTO seance VALUES('LUNDI', 17.0, 90,
                             (select ref(s) from sportif s where s.IDSPORTIF = 7),
-							(select ref(f) from sport f where f.IDSPORT = 5),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 13)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 13),
+							(select ref(f) from sport f where f.IDSPORT = 5)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 14 par l'entraineur IDSPORTIF = 149 avec le sport IDSPORT = 1
 INSERT INTO seance VALUES('MARDI', 10.0, 60,
                             (select ref(s) from sportif s where s.IDSPORTIF = 149),
-							(select ref(f) from sport f where f.IDSPORT = 1),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 14)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 14),
+							(select ref(f) from sport f where f.IDSPORT = 1)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 14 par l'entraineur IDSPORTIF = 57 avec le sport IDSPORT = 2
 INSERT INTO seance VALUES('DIMANCHE', 17.0, 60,
                             (select ref(s) from sportif s where s.IDSPORTIF = 57),
-							(select ref(f) from sport f where f.IDSPORT = 2),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 14)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 14),
+							(select ref(f) from sport f where f.IDSPORT = 2)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 15 par l'entraineur IDSPORTIF = 57 avec le sport IDSPORT = 2
 INSERT INTO seance VALUES('LUNDI', 16.3, 90,
                             (select ref(s) from sportif s where s.IDSPORTIF = 57),
-							(select ref(f) from sport f where f.IDSPORT = 2),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 15)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 15),
+							(select ref(f) from sport f where f.IDSPORT = 2)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 16 par l'entraineur IDSPORTIF = 57 avec le sport IDSPORT = 2
 INSERT INTO seance VALUES('LUNDI', 16.3, 90,
                             (select ref(s) from sportif s where s.IDSPORTIF = 57),
-							(select ref(f) from sport f where f.IDSPORT = 2),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 16)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 16),
+							(select ref(f) from sport f where f.IDSPORT = 2)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 16 par l'entraineur IDSPORTIF = 57 avec le sport IDSPORT = 2
 INSERT INTO seance VALUES('LUNDI', 17.0, 60,
                             (select ref(s) from sportif s where s.IDSPORTIF = 57),
-							(select ref(f) from sport f where f.IDSPORT = 2),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 16)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 16),
+							(select ref(f) from sport f where f.IDSPORT = 2)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 16 par l'entraineur IDSPORTIF = 60 avec le sport IDSPORT = 2
 INSERT INTO seance VALUES('LUNDI', 18.0, 60,
                             (select ref(s) from sportif s where s.IDSPORTIF = 60),
-							(select ref(f) from sport f where f.IDSPORT = 2),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 16)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 16),
+							(select ref(f) from sport f where f.IDSPORT = 2)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 16 par l'entraineur IDSPORTIF = 60 avec le sport IDSPORT = 2
 INSERT INTO seance VALUES('LUNDI', 19.0, 60,
                             (select ref(s) from sportif s where s.IDSPORTIF = 60),
-							(select ref(f) from sport f where f.IDSPORT = 2),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 16)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 16),
+							(select ref(f) from sport f where f.IDSPORT = 2)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 16 par l'entraineur IDSPORTIF = 60 avec le sport IDSPORT = 2
 INSERT INTO seance VALUES('LUNDI', 12.0, 60,
                             (select ref(s) from sportif s where s.IDSPORTIF = 60),
-							(select ref(f) from sport f where f.IDSPORT = 2),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 16)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 16),
+							(select ref(f) from sport f where f.IDSPORT = 2)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 16 par l'entraineur IDSPORTIF = 6 avec le sport IDSPORT = 5
 INSERT INTO seance VALUES('MERCREDI', 19.0, 60,
                             (select ref(s) from sportif s where s.IDSPORTIF = 6),
-							(select ref(f) from sport f where f.IDSPORT = 5),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 16)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 16),
+							(select ref(f) from sport f where f.IDSPORT = 5)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 17 par l'entraineur IDSPORTIF = 3 avec le sport IDSPORT = 2
 INSERT INTO seance VALUES('SAMEDI', 19.0, 60,
                             (select ref(s) from sportif s where s.IDSPORTIF = 3),
-							(select ref(f) from sport f where f.IDSPORT = 2),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 17)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 17),
+							(select ref(f) from sport f where f.IDSPORT = 2)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 17 par l'entraineur IDSPORTIF = 3 avec le sport IDSPORT = 2
 INSERT INTO seance VALUES('VENDREDI', 17.3, 120,
                             (select ref(s) from sportif s where s.IDSPORTIF = 3),
-							(select ref(f) from sport f where f.IDSPORT = 2),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 17)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 17),
+							(select ref(f) from sport f where f.IDSPORT = 2)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 17 par l'entraineur IDSPORTIF = 57 avec le sport IDSPORT = 2
 INSERT INTO seance VALUES('DIMANCHE', 17.0, 60,
                             (select ref(s) from sportif s where s.IDSPORTIF = 57),
-							(select ref(f) from sport f where f.IDSPORT = 2),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 17)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 17),
+							(select ref(f) from sport f where f.IDSPORT = 2)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 17 par l'entraineur IDSPORTIF = 3 avec le sport IDSPORT = 3
 INSERT INTO seance VALUES('DIMANCHE', 18.0, 30,
                             (select ref(s) from sportif s where s.IDSPORTIF = 3),
-							(select ref(f) from sport f where f.IDSPORT = 3),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 17)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 17),
+							(select ref(f) from sport f where f.IDSPORT = 3)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 17 par l'entraineur IDSPORTIF = 3 avec le sport IDSPORT = 3
 INSERT INTO seance VALUES('MARDI', 20.0, 30,
                             (select ref(s) from sportif s where s.IDSPORTIF = 3),
-							(select ref(f) from sport f where f.IDSPORT = 3),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 17)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 17),
+							(select ref(f) from sport f where f.IDSPORT = 3)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 17 par l'entraineur IDSPORTIF = 7 avec le sport IDSPORT = 5
 INSERT INTO seance VALUES('MARDI', 17.0, 90,
                             (select ref(s) from sportif s where s.IDSPORTIF = 7),
-							(select ref(f) from sport f where f.IDSPORT = 5),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 17)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 17),
+							(select ref(f) from sport f where f.IDSPORT = 5)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 18 par l'entraineur IDSPORTIF = 57 avec le sport IDSPORT = 2
 INSERT INTO seance VALUES('LUNDI', 16.3, 90,
                             (select ref(s) from sportif s where s.IDSPORTIF = 57),
-							(select ref(f) from sport f where f.IDSPORT = 2),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 18)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 18),
+							(select ref(f) from sport f where f.IDSPORT = 2)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 18 par l'entraineur IDSPORTIF = 60 avec le sport IDSPORT = 2
 INSERT INTO seance VALUES('MARDI', 19.0, 60,
                             (select ref(s) from sportif s where s.IDSPORTIF = 60),
-							(select ref(f) from sport f where f.IDSPORT = 2),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 18)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 18),
+							(select ref(f) from sport f where f.IDSPORT = 2)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 18 par l'entraineur IDSPORTIF = 60 avec le sport IDSPORT = 2
 INSERT INTO seance VALUES('MERCREDI', 14.0, 120,
                             (select ref(s) from sportif s where s.IDSPORTIF = 7),
-							(select ref(f) from sport f where f.IDSPORT = 5),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 18)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 18),
+							(select ref(f) from sport f where f.IDSPORT = 5)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 18 par l'entraineur IDSPORTIF = 60 avec le sport IDSPORT = 2
 INSERT INTO seance VALUES('MERCREDI', 16.0, 90,
                             (select ref(s) from sportif s where s.IDSPORTIF = 7),
-							(select ref(f) from sport f where f.IDSPORT = 5),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 18)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 18),
+							(select ref(f) from sport f where f.IDSPORT = 5)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 19 par l'entraineur IDSPORTIF = 57 avec le sport IDSPORT = 2
 INSERT INTO seance VALUES('DIMANCHE', 16.0, 90,
                             (select ref(s) from sportif s where s.IDSPORTIF = 57),
-							(select ref(f) from sport f where f.IDSPORT = 2),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 19)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 19),
+							(select ref(f) from sport f where f.IDSPORT = 2)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 20 par l'entraineur IDSPORTIF = 6 avec le sport IDSPORT = 2
 INSERT INTO seance VALUES('MERCREDI', 19.0, 60,
                             (select ref(s) from sportif s where s.IDSPORTIF = 6),
-							(select ref(f) from sport f where f.IDSPORT = 2),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 20)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 20),
+							(select ref(f) from sport f where f.IDSPORT = 2)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 21 par l'entraineur IDSPORTIF = 57 avec le sport IDSPORT = 2
 INSERT INTO seance VALUES('LUNDI', 16.3, 30,
                             (select ref(s) from sportif s where s.IDSPORTIF = 57),
-							(select ref(f) from sport f where f.IDSPORT = 2),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 21)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 21),
+							(select ref(f) from sport f where f.IDSPORT = 2)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 21 par l'entraineur IDSPORTIF = 60 avec le sport IDSPORT = 2
 INSERT INTO seance VALUES('MARDI', 19.0, 60,
                             (select ref(s) from sportif s where s.IDSPORTIF = 60),
-							(select ref(f) from sport f where f.IDSPORT = 2),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 21)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 21),
+							(select ref(f) from sport f where f.IDSPORT = 2)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 21 par l'entraineur IDSPORTIF = 7 avec le sport IDSPORT = 5
 INSERT INTO seance VALUES('MERCREDI', 17.0, 30,
                             (select ref(s) from sportif s where s.IDSPORTIF = 7),
-							(select ref(f) from sport f where f.IDSPORT = 5),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 21)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 21),
+							(select ref(f) from sport f where f.IDSPORT = 5)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 22 par l'entraineur IDSPORTIF = 57 avec le sport IDSPORT = 5
 INSERT INTO seance VALUES('MARDI', 10.0, 30,
                             (select ref(s) from sportif s where s.IDSPORTIF = 57),
-							(select ref(f) from sport f where f.IDSPORT = 5),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 22)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 22),
+							(select ref(f) from sport f where f.IDSPORT = 5)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 24 par l'entraineur IDSPORTIF = 149 avec le sport IDSPORT = 1
 INSERT INTO seance VALUES('JEUDI', 9.0, 90,
                             (select ref(s) from sportif s where s.IDSPORTIF = 149),
-							(select ref(f) from sport f where f.IDSPORT = 1),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 24)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 24),
+							(select ref(f) from sport f where f.IDSPORT = 1)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 24 par l'entraineur IDSPORTIF = 57 avec le sport IDSPORT = 2
 INSERT INTO seance VALUES('JEUDI', 10.0, 90,
                             (select ref(s) from sportif s where s.IDSPORTIF = 57),
-							(select ref(f) from sport f where f.IDSPORT = 2),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 24)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 24),
+							(select ref(f) from sport f where f.IDSPORT = 2)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 25 par l'entraineur IDSPORTIF = 149 avec le sport IDSPORT = 2
 INSERT INTO seance VALUES('DIMANCHE', 18.0, 60,
                             (select ref(s) from sportif s where s.IDSPORTIF = 149),
-							(select ref(f) from sport f where f.IDSPORT = 2),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 25)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 25),
+							(select ref(f) from sport f where f.IDSPORT = 2)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 27 par l'entraineur IDSPORTIF = 57 avec le sport IDSPORT = 2
 INSERT INTO seance VALUES('JEUDI', 10.0, 90,
                             (select ref(s) from sportif s where s.IDSPORTIF = 57),
-							(select ref(f) from sport f where f.IDSPORT = 2),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 27)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 27),
+							(select ref(f) from sport f where f.IDSPORT = 2)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 27 par l'entraineur IDSPORTIF = 7 avec le sport IDSPORT = 5
 INSERT INTO seance VALUES('MERCREDI', 14.0, 120,
                             (select ref(s) from sportif s where s.IDSPORTIF = 7),
-							(select ref(f) from sport f where f.IDSPORT = 5),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 27)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 27),
+							(select ref(f) from sport f where f.IDSPORT = 5)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 27 par l'entraineur IDSPORTIF = 7 avec le sport IDSPORT = 5
 INSERT INTO seance VALUES('MERCREDI', 17.0, 90,
                             (select ref(s) from sportif s where s.IDSPORTIF = 7),
-							(select ref(f) from sport f where f.IDSPORT = 5),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 27)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 27),
+							(select ref(f) from sport f where f.IDSPORT = 5)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 28 par l'entraineur IDSPORTIF = 149 avec le sport IDSPORT = 1
 INSERT INTO seance VALUES('LUNDI', 9.0, 30,
                             (select ref(s) from sportif s where s.IDSPORTIF = 149),
-							(select ref(f) from sport f where f.IDSPORT = 1),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 28)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 28),
+							(select ref(f) from sport f where f.IDSPORT = 1)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 28 par l'entraineur IDSPORTIF = 6 avec le sport IDSPORT = 5
 INSERT INTO seance VALUES('DIMANCHE', 9.0, 30,
                             (select ref(s) from sportif s where s.IDSPORTIF = 6),
-							(select ref(f) from sport f where f.IDSPORT = 5),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 28)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 28),
+							(select ref(f) from sport f where f.IDSPORT = 5)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 28 par l'entraineur IDSPORTIF = 6 avec le sport IDSPORT = 5
 INSERT INTO seance VALUES('DIMANCHE', 15.0, 60,
                             (select ref(s) from sportif s where s.IDSPORTIF = 6),
-							(select ref(f) from sport f where f.IDSPORT = 5),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 28)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 28),
+							(select ref(f) from sport f where f.IDSPORT = 5)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 28 par l'entraineur IDSPORTIF = 6 avec le sport IDSPORT = 5
 INSERT INTO seance VALUES('DIMANCHE', 16.0, 60,
                             (select ref(s) from sportif s where s.IDSPORTIF = 6),
-							(select ref(f) from sport f where f.IDSPORT = 5),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 28)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 28),
+							(select ref(f) from sport f where f.IDSPORT = 5)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 28 par l'entraineur IDSPORTIF = 6 avec le sport IDSPORT = 5
 INSERT INTO seance VALUES('DIMANCHE', 17.0, 60,
                             (select ref(s) from sportif s where s.IDSPORTIF = 6),
-							(select ref(f) from sport f where f.IDSPORT = 5),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 28)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 28),
+							(select ref(f) from sport f where f.IDSPORT = 5)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 28 par l'entraineur IDSPORTIF = 7 avec le sport IDSPORT = 5
 INSERT INTO seance VALUES('MARDI', 18.0, 90,
                             (select ref(s) from sportif s where s.IDSPORTIF = 7),
-							(select ref(f) from sport f where f.IDSPORT = 5),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 28)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 28),
+							(select ref(f) from sport f where f.IDSPORT = 5)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 28 par l'entraineur IDSPORTIF = 7 avec le sport IDSPORT = 5
 INSERT INTO seance VALUES('SAMEDI', 18.0, 90,
                             (select ref(s) from sportif s where s.IDSPORTIF = 7),
-							(select ref(f) from sport f where f.IDSPORT = 5),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 28)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 28),
+							(select ref(f) from sport f where f.IDSPORT = 5)
 						 );
 --// la seance est faite dans le salle IDGYMNASE = 28 par l'entraineur IDSPORTIF = 7 avec le sport IDSPORT = 5
 INSERT INTO seance VALUES('VENDREDI', 18.0, 90,
                             (select ref(s) from sportif s where s.IDSPORTIF = 7),
-							(select ref(f) from sport f where f.IDSPORT = 5),
-							(select ref(g) from gymnass g where g.IDGYMNASE = 28)
+							(select ref(g) from gymnass g where g.IDGYMNASE = 28),
+							(select ref(f) from sport f where f.IDSPORT = 5)
 						 );
 /*Partie V : Langage d’interrogation de données*/
 		
@@ -5541,3 +5716,5 @@ WHERE age IN (
         )
     )
 );
+
+
